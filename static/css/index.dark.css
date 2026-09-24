@@ -1,0 +1,142 @@
+/**
+ * rpihub - simple RaspberryPi hub for other programs
+ * Copyright (C) 2026 Jiri Skoda <developer@skodaj.cz>
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; version 2 of the License.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+:root{
+    --background-color: rgb(0 0 0);
+    --text-color: rgb(255 255 255);
+
+    --background-translucent-color: rgba(0, 0, 0, 0.5);
+
+    --body-color1: rgb(126 8 8);
+    --body-color2: rgb(162 16 96);
+    --body-color3: rgb(169 105 16);
+    --body-color4: rgb(173 20 79);
+
+    --err-color: rgb(143, 0, 0);
+    --err-background-color: rgba(143, 0, 0, 0.5);
+}
+
+
+/**
+ * Body background animation
+ */
+
+body {
+    --bg-color1: var(--body-color1);
+    --bg-color2: var(--body-color2);
+    --bg-color3: var(--body-color3);
+    --bg-color4: var(--body-color4);
+
+    background: var(--bg-color1);
+    color: var(--text-color);
+
+
+
+    background:
+        radial-gradient(
+            at 19% 19%,
+            var(--bg-color1),
+            transparent 70%
+        ),
+        radial-gradient(
+            at 78% 18%,
+            var(--bg-color2),
+            transparent 70%
+        ),
+        radial-gradient(
+            at 79% 71%,
+            var(--bg-color3),
+            transparent 70%
+        ),
+        radial-gradient(
+            at 22% 69%,
+            var(--bg-color4),
+            transparent 70%
+        ),
+        var(--bg-color1);
+
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+
+    animation: body-background 16s ease-in-out infinite;
+}
+
+/**
+ * Apps coloring.
+ */
+main > section > article #apps ul > li > a:hover,
+main > section > article #apps ul > li > a:active{
+    box-shadow: 2px 2px 8px var(--accent-color-dark);
+}
+
+main > section > article #apps ul > li > a > h3{
+    color: var(--accent-color-light);
+}
+
+/**
+ * Body background animation
+ */
+
+@keyframes body-background {
+    0% {
+        --bg-color1: rgb(126 8 8);    /* --body-color1 */
+        --bg-color2: rgb(162 16 96);  /* --body-color2 */
+        --bg-color3: rgb(169 105 16); /* --body-color3 */
+        --bg-color4: rgb(173 20 79);  /* --body-color4 */
+    }
+
+    25% {
+        --bg-color1: rgb(162 16 96);   /* --body-color2 */
+        --bg-color2: rgb(169 105 16);  /* --body-color3 */
+        --bg-color3: rgb(173 20 79);   /* --body-color4 */
+        --bg-color4: rgb(126 8 8);     /* --body-color1 */
+    }
+
+    50% {
+        --bg-color1: rgb(169 105 16);  /* --body-color3 */
+        --bg-color2: rgb(173 20 79);   /* --body-color4 */
+        --bg-color3: rgb(126 8 8);     /* --body-color1 */
+        --bg-color4: rgb(162 16 96);   /* --body-color2 */
+    }
+
+    75% {
+        --bg-color1: rgb(173 20 79);  /* --body-color4 */
+        --bg-color2: rgb(126 8 8);    /* --body-color1 */
+        --bg-color3: rgb(162 16 96);  /* --body-color2 */
+        --bg-color4: rgb(169 105 16); /* --body-color3 */
+    }
+
+    100% {
+        --bg-color1: rgb(126 8 8);    /* --body-color1 */
+        --bg-color2: rgb(162 16 96);  /* --body-color2 */
+        --bg-color3: rgb(169 105 16); /* --body-color3 */
+        --bg-color4: rgb(173 20 79);  /* --body-color4 */
+    }
+}
+
+/**
+ * General content hiding
+ */
+.dark-only{
+    display: initial !important;
+}
+
+.light-only{
+    display: none !important;
+}

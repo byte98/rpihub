@@ -1,0 +1,19 @@
+{
+  "code": "cs",
+  "name": "Czech",
+  "nativeName": "Čeština",
+  "flag": "cz",
+  "phrases": {
+    "welcome": "Vítejte",
+    "today_is": "Dnes je",
+    "loading_apps": "Načítání aplikací...",
+    "loading": "Načítání...",
+    "error_start": "Spuštění aplikace se nezdařilo!",
+    "error_language": "Nepodařilo se načíst jazyková data. Zkuste to znovu.",
+    "error_apps": "Načítání aplikací se nezdařilo!",
+    "error_apps_body": "Nepodařilo se načíst seznam nainstalovaných aplikací. Zkuste to znovu.",
+    "retry": "Opakovat",
+    "close": "Zavřít",
+    "show_details": "Zobrazit podrobnosti"
+  }
+}

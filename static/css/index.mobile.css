@@ -1,0 +1,48 @@
+/**
+ * rpihub - simple RaspberryPi hub for other programs
+ * Copyright (C) 2026 Jiri Skoda <developer@skodaj.cz>
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; version 2 of the License.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+ /**
+  * Dialogs
+  */
+.dialogs{
+    width: 90%;
+}
+
+/**
+ * General content hiding
+ */
+.mobile-only{
+    display: initial !important;
+}
+
+.desktop-only{
+    display: none !important;
+}
+
+main > section > article #apps ul{
+    grid-template-rows: repeat(auto-fit, minmax(100px, 1fr));
+    grid-template-columns: 1fr;
+}
+
+main{
+    margin: 0 auto;
+    width: 100%;
+    top: 0;
+    left: 0;
+    transform: none;
+}

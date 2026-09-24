@@ -1,0 +1,19 @@
+{
+  "code": "en",
+  "name": "English",
+  "nativeName": "English",
+  "flag": "gb",
+  "phrases": {
+    "welcome": "Welcome",
+    "today_is": "Today is",
+    "loading_apps": "Loading applications...",
+    "loading": "Loading...",
+    "error_start": "Start of the application failed!",
+    "error_language": "The application failed to load language data. Please try again.",
+    "error_apps": "Loading applications failed!",
+    "error_apps_body": "The application failed to fetch the list of installed applications. Please try again.",
+    "retry": "Retry",
+    "close": "Close",
+    "show_details": "Show details"
+  }
+}
