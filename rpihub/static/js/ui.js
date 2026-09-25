@@ -130,7 +130,7 @@ class UI{
         }
         const selected = container.querySelector(".language-selected");
         if (selected){
-            selected.innerHTML = `<img src="/flags/${language.flag}.svg" alt=""> <span>${language.nativeName}</span>`;
+            selected.innerHTML = `<img src="/flags/${language.flag}.svg" alt=""> <span>${language.nativeName}</span><i class="las la-angle-down"></i>`;
         }
         container.querySelectorAll(".language-option").forEach((option) => {
             option.classList.toggle("selected", option.dataset.language === language.code);

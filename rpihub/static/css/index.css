@@ -563,8 +563,8 @@ body {
 }
 
 #language-switcher .language-selected{
-    border: 1px solid var(--text-color);
-    background: var(--background-color);
+    border: none;
+    background: transparent;
     color: var(--text-color);
     padding: .3rem .5rem;
     cursor: pointer;
@@ -572,12 +572,21 @@ body {
     display: flex;
     align-items: center;
     gap: .4rem;
+    transition: background 0.3s ease-in-out;
+    transition: transform 0.3s ease-in-out;
+    font-size: 14pt;
+    font-weight: 500;
 }
 
-#language-switcher .language-selected::after{
-    content: "\25BE";
-    font-size: .8em;
+#language-switcher .language-selected:hover{
+    background: var(--background-translucent-color);
 }
+
+#language-switcher .language-selected:active{
+    background: var(--background-color);
+    transform: scale(0.85);
+}
+
 
 #language-switcher .language-menu{
     position: absolute;
@@ -586,9 +595,10 @@ body {
     min-width: 100%;
     width: max-content;
     z-index: 20;
-    background: var(--background-color);
-    border: 1px solid var(--text-color);
+    background: var(--background-translucent-color);
+    backdrop-filter: blur(16px);
     box-shadow: 2px 2px 8px rgba(0, 0, 0, .35);
+    border: 1px solid rgb(127, 127, 127);
 }
 
 #language-switcher .language-option{
@@ -603,16 +613,22 @@ body {
     gap: .4rem;
     font: inherit;
     text-align: left;
+    font-size: 14pt;
+    font-weight: 500;
 }
 
-#language-switcher .language-option:hover,
+#language-switcher .language-option:hover{
+    background: var(--background-color);
+}
+
 #language-switcher .language-option.selected{
-    background: var(--background-translucent-color);
+    background: var(--background-color);
+    font-weight: 900;
 }
 
 #language-switcher img{
-    width: 1.2rem;
-    height: .8rem;
+    width: 2rem;
+    height: 1rem;
     object-fit: cover;
     vertical-align: middle;
 }
