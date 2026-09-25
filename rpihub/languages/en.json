@@ -15,5 +15,6 @@
     "retry": "Retry",
     "close": "Close",
     "show_details": "Show details"
-  }
+  },
+  "version": "1.0.0"
 }

@@ -66,9 +66,10 @@ class UI{
     }
 
     /**
-     * Builds the language switcher.
-     * @param {Object[]} languages Supported languages.
-     * @param {Function} onChange Called when the language changes.
+     * Builds the custom language dropdown.
+     *
+     * @param {Object[]} languages Supported language metadata.
+     * @param {Function} onChange Called with the selected language code.
      */
     setLanguages(languages, onChange){
         const container = document.querySelector("#language-switcher");
@@ -76,22 +77,64 @@ class UI{
             return;
         }
         container.innerHTML = "";
+
+        const selected = document.createElement("button");
+        selected.type = "button";
+        selected.className = "language-selected";
+        selected.setAttribute("aria-haspopup", "listbox");
+        selected.setAttribute("aria-expanded", "false");
+
+        const menu = document.createElement("div");
+        menu.className = "language-menu hidden";
+        menu.setAttribute("role", "listbox");
+
         for (const language of languages){
-            const button = document.createElement("button");
-            button.type = "button";
-            button.dataset.language = language.code;
-            button.title = language.nativeName;
-            button.innerHTML = `<img src="/static/flags/${language.flag}.svg" alt=""> <span>${language.nativeName}</span>`;
-            button.addEventListener("click", () => onChange(language.code));
-            container.appendChild(button);
+            const option = document.createElement("button");
+            option.type = "button";
+            option.className = "language-option";
+            option.dataset.language = language.code;
+            option.setAttribute("role", "option");
+            option.innerHTML = `<img src="/flags/${language.flag}.svg" alt=""> <span>${language.nativeName}</span>`;
+            option.addEventListener("click", () => {
+                onChange(language.code);
+                menu.classList.add("hidden");
+                selected.setAttribute("aria-expanded", "false");
+                this.updateLanguageSwitcher();
+            });
+            menu.appendChild(option);
         }
+
+        selected.addEventListener("click", () => {
+            const hidden = menu.classList.toggle("hidden");
+            selected.setAttribute("aria-expanded", String(!hidden));
+        });
+
+        document.addEventListener("click", (event) => {
+            if (!container.contains(event.target)) {
+                menu.classList.add("hidden");
+                selected.setAttribute("aria-expanded", "false");
+            }
+        });
+
+        container.appendChild(selected);
+        container.appendChild(menu);
         this.updateLanguageSwitcher();
     }
 
-    /** Updates the selected language in the language switcher. */
+    /** Updates the selected language shown by the custom dropdown. */
     updateLanguageSwitcher(){
-        document.querySelectorAll("#language-switcher button").forEach((button) => {
-            button.classList.toggle("selected", button.dataset.language === LanguageBase.language);
+        const language = LanguageBase.languages.find((item) => item.code === LanguageBase.language);
+        const container = document.querySelector("#language-switcher");
+        if (!language || !container){
+            return;
+        }
+        const selected = container.querySelector(".language-selected");
+        if (selected){
+            selected.innerHTML = `<img src="/flags/${language.flag}.svg" alt=""> <span>${language.nativeName}</span>`;
+        }
+        container.querySelectorAll(".language-option").forEach((option) => {
+            option.classList.toggle("selected", option.dataset.language === language.code);
+            option.setAttribute("aria-selected", String(option.dataset.language === language.code));
         });
     }
 

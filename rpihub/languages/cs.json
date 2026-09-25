@@ -15,5 +15,6 @@
     "retry": "Opakovat",
     "close": "Zavřít",
     "show_details": "Zobrazit podrobnosti"
-  }
+  },
+  "version": "1.0.0"
 }

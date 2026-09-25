@@ -21,7 +21,7 @@ async function main(){
             throw new Error(languageResponse.message);
         }
 
-        await LanguageBase.initialize(languageResponse.data.languages, languageResponse.data.version, api);
+        await LanguageBase.initialize(languageResponse.data.languages, api);
         LanguageBase.translate();
         ui.setLanguages(LanguageBase.languages, async (language) => {
             LanguageBase.language = language;

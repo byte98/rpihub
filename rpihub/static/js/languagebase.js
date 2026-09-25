@@ -2,68 +2,62 @@
 // Copyright (C) 2026 Jiri Skoda <developer@skodaj.cz>
 
 /**
- * Class representing the language base and its IndexedDB cache.
+ * Manages translated phrases and their IndexedDB cache.
  */
 class LanguageBase{
 
-    /** @type {string} */
+    /** @type {string} IndexedDB database name. */
     static #databaseName = "rpihub";
 
-    /** @type {string} */
+    /** @type {string} IndexedDB object-store name. */
     static #storeName = "languages";
 
-    /** @type {string} */
+    /** @type {string} Local-storage key containing the selected language. */
     static #languageKey = "rpihub-language";
 
-    /** @type {Object<string, Object>} */
+    /** @type {Object<string, Object>} Loaded language bases indexed by code. */
     static #bases = {};
 
-    /** @type {Object<string, Object>} */
+    /** @type {Object<string, Object>} Supported language metadata indexed by code. */
     static #metadata = {};
 
-    /** @type {string} */
-    static #version = "";
-
     /**
-     * Initializes language metadata and cached language data.
-     * @param {Object} metadata Server language metadata.
-     * @param {string} version Current server language-base version.
-     * @param {API} api API wrapper.
-     * @returns {Promise<void>} Initialization promise.
+     * Initializes language metadata and synchronizes each language independently.
+     *
+     * Only a language whose server version differs from its cached version is
+     * downloaded. This prevents changing one language from invalidating all
+     * other cached language bases.
+     *
+     * @param {Object[]} metadata Server metadata for supported languages.
+     * @param {API} api API wrapper used to download language bases.
+     * @returns {Promise<void>} Promise resolved after synchronization completes.
      */
-    static async initialize(metadata, version, api){
-        LanguageBase.#version = version;
+    static async initialize(metadata, api){
         LanguageBase.#metadata = {};
+        LanguageBase.#bases = {};
         for (const language of metadata){
             LanguageBase.#metadata[language.code] = language;
         }
 
-        const cachedVersion = await LanguageBase.#getCachedVersion();
-        if (cachedVersion !== version){
-            for (const language of metadata){
-                const response = await api.language(language.code);
-                if (response.success){
-                    await LanguageBase.#putCachedLanguage(language.code, response.data);
-                }
+        const cachedLanguages = await LanguageBase.#getCachedLanguages();
+        for (const language of metadata){
+            const cached = cachedLanguages[language.code];
+            if (cached && cached.version === language.version){
+                LanguageBase.#bases[language.code] = cached;
+                continue;
             }
-        }
-        else{
-            const cached = await LanguageBase.#getCachedLanguages();
-            LanguageBase.#bases = cached;
-        }
 
-        if (Object.keys(LanguageBase.#bases).length === 0){
-            for (const language of metadata){
-                const response = await api.language(language.code);
-                if (response.success){
-                    await LanguageBase.#putCachedLanguage(language.code, response.data);
-                }
+            const response = await api.language(language.code);
+            if (response.success){
+                await LanguageBase.#putCachedLanguage(language.code, response.data);
+            }
+            else if (cached){
+                LanguageBase.#bases[language.code] = cached;
             }
         }
-        await LanguageBase.#setCachedVersion(version);
     }
 
-    /** @returns {string} Current language. */
+    /** @returns {string} Currently selected language code. */
     static get language(){
         const stored = localStorage.getItem(LanguageBase.#languageKey);
         const preferred = stored || (navigator.language || "en").split("-")[0];
@@ -75,19 +69,15 @@ class LanguageBase{
         return reti;
     }
 
-    /** @returns {string} Current language-base version. */
-    static get version(){
-        return LanguageBase.#version;
-    }
-
-    /** @returns {Object[]} Supported languages. */
+    /** @returns {Object[]} Supported language metadata. */
     static get languages(){
         return Object.values(LanguageBase.#metadata);
     }
 
     /**
-     * Sets the current language.
-     * @param {string} language Language code.
+     * Changes the selected language.
+     *
+     * @param {string} language Language code to select.
      */
     static set language(language){
         if (LanguageBase.#metadata[language]){
@@ -96,9 +86,10 @@ class LanguageBase{
     }
 
     /**
-     * Gets a phrase in the current language.
-     * @param {string} key Phrase key.
-     * @returns {string} Translated phrase or the key.
+     * Returns a translated phrase.
+     *
+     * @param {string} key Phrase identifier.
+     * @returns {string} Translated phrase, English fallback, or the key itself.
      */
     static phrase(key){
         const current = LanguageBase.#bases[LanguageBase.language]?.phrases || {};
@@ -107,7 +98,7 @@ class LanguageBase{
         return reti;
     }
 
-    /** Translates all elements carrying data-phrase. */
+    /** Translates all DOM elements carrying a data-phrase attribute. */
     static translate(){
         document.querySelectorAll("[data-phrase]").forEach((element) => {
             element.innerText = LanguageBase.phrase(element.dataset.phrase);
@@ -115,7 +106,11 @@ class LanguageBase{
         document.documentElement.lang = LanguageBase.language;
     }
 
-    /** @returns {Promise<IDBDatabase>} Opens the language cache. */
+    /**
+     * Opens the IndexedDB language cache.
+     *
+     * @returns {Promise<IDBDatabase>} Open database connection.
+     */
     static #openDatabase(){
         return new Promise((resolve, reject) => {
             const request = indexedDB.open(LanguageBase.#databaseName, 1);
@@ -125,30 +120,30 @@ class LanguageBase{
         });
     }
 
-    /** @returns {Promise<string>} Cached language-base version. */
-    static async #getCachedVersion(){
-        const db = await LanguageBase.#openDatabase();
-        const value = await LanguageBase.#get(db, "version");
-        db.close();
-        let reti = value || "";
-        return reti;
-    }
-
-    /** @returns {Promise<Object<string, Object>>} Cached language data. */
+    /**
+     * Reads all cached language bases.
+     *
+     * @returns {Promise<Object<string, Object>>} Cached language bases indexed by code.
+     */
     static async #getCachedLanguages(){
         const db = await LanguageBase.#openDatabase();
         const keys = await LanguageBase.#keys(db);
         const result = {};
         for (const key of keys){
-            if (key !== "version"){
-                result[key] = await LanguageBase.#get(db, key);
-            }
+            result[key] = await LanguageBase.#get(db, key);
         }
         db.close();
         let reti = result;
         return reti;
     }
 
+    /**
+     * Stores one language base in IndexedDB and in the in-memory cache.
+     *
+     * @param {string} language Language code.
+     * @param {Object} data Downloaded language base.
+     * @returns {Promise<void>} Promise resolved after the cache is updated.
+     */
     static async #putCachedLanguage(language, data){
         const db = await LanguageBase.#openDatabase();
         await LanguageBase.#put(db, language, data);
@@ -156,12 +151,13 @@ class LanguageBase{
         LanguageBase.#bases[language] = data;
     }
 
-    static async #setCachedVersion(version){
-        const db = await LanguageBase.#openDatabase();
-        await LanguageBase.#put(db, "version", version);
-        db.close();
-    }
-
+    /**
+     * Reads a value from an IndexedDB object store.
+     *
+     * @param {IDBDatabase} db Database connection.
+     * @param {string} key Object-store key.
+     * @returns {Promise<Object|undefined>} Stored value.
+     */
     static #get(db, key){
         return new Promise((resolve, reject) => {
             const request = db.transaction(LanguageBase.#storeName, "readonly").objectStore(LanguageBase.#storeName).get(key);
@@ -170,6 +166,14 @@ class LanguageBase{
         });
     }
 
+    /**
+     * Stores a value in IndexedDB.
+     *
+     * @param {IDBDatabase} db Database connection.
+     * @param {string} key Object-store key.
+     * @param {Object} value Value to store.
+     * @returns {Promise<void>} Promise resolved after the write completes.
+     */
     static #put(db, key, value){
         return new Promise((resolve, reject) => {
             const request = db.transaction(LanguageBase.#storeName, "readwrite").objectStore(LanguageBase.#storeName).put(value, key);
@@ -178,6 +182,12 @@ class LanguageBase{
         });
     }
 
+    /**
+     * Returns all keys in the language cache.
+     *
+     * @param {IDBDatabase} db Database connection.
+     * @returns {Promise<IDBValidKey[]>} Cached language codes.
+     */
     static #keys(db){
         return new Promise((resolve, reject) => {
             const request = db.transaction(LanguageBase.#storeName, "readonly").objectStore(LanguageBase.#storeName).getAllKeys();
