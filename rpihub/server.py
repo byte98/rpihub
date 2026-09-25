@@ -55,6 +55,22 @@ class RPiHubServer:
             """Return the RPi Hub frontend."""
             return FileResponse(self.static_directory / "index.html")
 
+        @app.get("/service-worker.js", include_in_schema=False)
+        async def service_worker() -> FileResponse:
+            """Return the PWA service worker from the application root.
+
+            The service worker is intentionally served from ``/`` rather than
+            ``/static/`` so that its default scope covers the complete RPi Hub
+            application.
+
+            :returns: JavaScript service-worker resource.
+            """
+            return FileResponse(
+                self.static_directory / "service-worker.js",
+                media_type="application/javascript",
+                headers={"Cache-Control": "no-cache"},
+            )
+
         @app.get("/api/applications", include_in_schema=False)
         async def applications() -> JSONResponse:
             """Return all valid application definitions."""

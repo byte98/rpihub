@@ -21,6 +21,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="description" content="Simple RaspberryPi hub for other programs">
+    <link rel="manifest" href="/static/manifest.webmanifest">
+    <link rel="apple-touch-icon" href="/static/icons/icon-192.png">
     <title>RPi Hub</title>
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
     <link type="text/css" rel="stylesheet" href="/static/fonts/selawik.css">
@@ -106,5 +110,10 @@
             </div>
         </article>
     </template>
+    <script type="text/javascript">
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", () => navigator.serviceWorker.register("/service-worker.js"));
+        }
+    </script>
 </body>
 </html>
