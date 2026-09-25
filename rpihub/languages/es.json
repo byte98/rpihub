@@ -1,0 +1,20 @@
+{
+  "code": "es",
+  "name": "Spanish",
+  "nativeName": "Español",
+  "flag": "es",
+  "phrases": {
+    "welcome": "Bienvenido",
+    "today_is": "Hoy es",
+    "loading_apps": "Cargando aplicaciones...",
+    "loading": "Cargando...",
+    "error_start": "¡No se pudo iniciar la aplicación!",
+    "error_language": "No se pudieron cargar los datos de idioma. Inténtalo de nuevo.",
+    "error_apps": "¡No se pudieron cargar las aplicaciones!",
+    "error_apps_body": "No se pudo obtener la lista de aplicaciones instaladas. Inténtalo de nuevo.",
+    "retry": "Reintentar",
+    "close": "Cerrar",
+    "show_details": "Mostrar detalles"
+  },
+  "version": "1.0.0"
+}

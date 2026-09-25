@@ -1,0 +1,20 @@
+{
+  "code": "pl",
+  "name": "Polish",
+  "nativeName": "Polski",
+  "flag": "pl",
+  "phrases": {
+    "welcome": "Witamy",
+    "today_is": "Dzisiaj jest",
+    "loading_apps": "Ładowanie aplikacji...",
+    "loading": "Ładowanie...",
+    "error_start": "Uruchomienie aplikacji nie powiodło się!",
+    "error_language": "Nie udało się załadować danych językowych. Spróbuj ponownie.",
+    "error_apps": "Ładowanie aplikacji nie powiodło się!",
+    "error_apps_body": "Nie udało się pobrać listy zainstalowanych aplikacji. Spróbuj ponownie.",
+    "retry": "Spróbuj ponownie",
+    "close": "Zamknij",
+    "show_details": "Pokaż szczegóły"
+  },
+  "version": "1.0.0"
+}

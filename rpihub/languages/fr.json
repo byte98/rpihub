@@ -1,0 +1,20 @@
+{
+  "code": "fr",
+  "name": "French",
+  "nativeName": "Français",
+  "flag": "fr",
+  "phrases": {
+    "welcome": "Bienvenue",
+    "today_is": "Aujourd’hui, nous sommes le",
+    "loading_apps": "Chargement des applications...",
+    "loading": "Chargement...",
+    "error_start": "Échec du démarrage de l’application !",
+    "error_language": "Impossible de charger les données linguistiques. Veuillez réessayer.",
+    "error_apps": "Échec du chargement des applications !",
+    "error_apps_body": "Impossible de récupérer la liste des applications installées. Veuillez réessayer.",
+    "retry": "Réessayer",
+    "close": "Fermer",
+    "show_details": "Afficher les détails"
+  },
+  "version": "1.0.0"
+}
