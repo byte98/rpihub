@@ -155,6 +155,14 @@ class UI{
         const classes = {
             "error": "err-dialog"
         };
+        const sounds = {
+            "error": "/static/error.mp3"
+        };
+        const sound = sounds[type] !== undefined ? sounds[type] : null;
+        if (sound !== null){
+            const audio = new Audio(sound);
+            audio.play();
+        }
         const icon = icons[type] !== undefined ? icons[type] : "las la-info-circle";
         const className = classes[type] !== undefined ? classes[type] : "";
         const dialog = this.#dialogTemplate.content.cloneNode(true).querySelector(".dialog");
